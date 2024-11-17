@@ -248,57 +248,16 @@ class Program
 
                     try
                     {
-                        string? reviewer = null;
-                        var changelog = task.Manifest?.Plugin.Changelog;
-                        int? committingPrNum = null;
-
-                        var relevantCommitHashForWebServices = task.Manifest?.Plugin.Commit;
-                        
-                        // Removals do not have a manifest, so we need to use the have commit (as that is what we are removing)
                         if (task.Type == BuildTask.TaskType.Remove)
                         {
-                            relevantCommitHashForWebServices = task.HaveCommit;
-                        }
-
-                        if (string.IsNullOrEmpty(relevantCommitHashForWebServices))
-                        {
-                            throw new Exception("No valid commit hash for task");
-                        }
-                        
-                        // When committing: Get the PR number for the merge to the manifest repo, and get the first approving reviewer
-                        if (mode == ModeOfOperation.Commit)
-                        {
-                            committingPrNum =
-                                await webservices.GetPrNumber(task.InternalName, relevantCommitHashForWebServices)
-                                ?? throw new Exception($"No PR number for commit ({task.InternalName}, {relevantCommitHashForWebServices})");
-                            Log.Verbose("PR number for {InternalName} ({Sha}): {PrNum}", task.InternalName, relevantCommitHashForWebServices, committingPrNum);
-                            taskToPrNumber.Add(task, committingPrNum.Value);
-
-                            if (string.IsNullOrEmpty(changelog))
-                            {
-                                changelog = await gitHubApi!.GetIssueBody(committingPrNum.Value);
-                            }
-                            
-                            reviewer = await gitHubApi!.GetReviewer(committingPrNum.Value);
-                            Log.Information("Reviewer for {InternalName} ({PrNum}): {Reviewer}", task.InternalName, committingPrNum.Value, reviewer);
-                        }
-                        // When building a PR: Register the PR number for the plugin with webservices so that we know what plugin update came from what PR
-                        else if (mode == ModeOfOperation.PullRequest)
-                        {
-                            await webservices.RegisterPrNumber(task.InternalName, relevantCommitHashForWebServices,
-                                                               prNumber ?? throw new Exception("No PR number"));
-                        }
-                        
-                        if (task.Type == BuildTask.TaskType.Remove)
-                        {
-                            // If we are not committing, removal tasks don't do anything, and we should not consider them
+                            // If we are not committing, removal tasks don't do anything and we should not consider them
                             if (mode != ModeOfOperation.Commit)
                                 continue;
 
                             GitHubOutputBuilder.StartGroup($"Remove {task.InternalName}");
                             Log.Information("Remove: {Name} - {Channel}", task.InternalName, task.Channel);
 
-                            var removeStatus = await buildProcessor.ProcessTask(task, true, null, reviewer, tasks);
+                            var removeStatus = await buildProcessor.ProcessTask(task, true, null, null, tasks);
                             allResults.Add(removeStatus);
 
                             if (removeStatus.Success)
@@ -577,7 +536,7 @@ class Program
                             hiddenText = $"\n\n##### {numHidden} hidden needs (known safe NuGet packages).\n";
                         
                         needsText = 
-                            $"\n\n<details>\n<summary>{allNeeds.Count} Needs " + 
+                            $"\n\n<details>\n<summary>{allNeeds.Count} Needs " +
                             (numUnreviewed > 0 ? $"(⚠️ {numUnreviewed} UNREVIEWED)" : "(✅ All reviewed)") +
                             "</summary>\n\n" + needsTable.GetText() + hiddenText +
                             "</details>\n\n";
