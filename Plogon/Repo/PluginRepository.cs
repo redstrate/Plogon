@@ -189,9 +189,9 @@ public class PluginRepository
     {
         if (this.State.ReviewedNeeds.Any(x => x.Key == need.Key && x.Version == need.Version))
         {
-            throw new Exception($"Need {need.Key}(v{need.Version}) already in state");
+            //throw new Exception($"Need {need.Key}(v{need.Version}) already in state");
+        } else {
+            this.State.ReviewedNeeds.Add(need);
         }
-        
-        this.State.ReviewedNeeds.Add(need);
     }
 }
