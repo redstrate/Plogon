@@ -536,11 +536,6 @@ class Program
                     var needsText = string.Empty;
                     if (allNeeds.Count > 0)
                     {
-                        string Pluralize(int count, string singular)
-                        {
-                            return count == 1 ? singular : singular + "s";
-                        }
-                        
                         var numUnreviewed = 0;
                         var numHidden = 0;
                         var needsTable = MarkdownTableBuilder.Create("Type", "Name", "Version", "Reviewed by");
@@ -579,10 +574,10 @@ class Program
 
                         var hiddenText = string.Empty;
                         if (numHidden > 0)
-                            hiddenText = $"\n\n##### {numHidden} hidden {Pluralize(numHidden, "need")} (known safe NuGet packages).\n";
+                            hiddenText = $"\n\n##### {numHidden} hidden needs (known safe NuGet packages).\n";
                         
                         needsText = 
-                            $"\n\n<details>\n<summary>{allNeeds.Count} {Pluralize(allNeeds.Count, "Need")} " + 
+                            $"\n\n<details>\n<summary>{allNeeds.Count} Needs " + 
                             (numUnreviewed > 0 ? $"(⚠️ {numUnreviewed} UNREVIEWED)" : "(✅ All reviewed)") +
                             "</summary>\n\n" + needsTable.GetText() + hiddenText +
                             "</details>\n\n";
