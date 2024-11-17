@@ -297,7 +297,7 @@ class Program
 
                         numTried++;
 
-                        var buildResult = await buildProcessor.ProcessTask(task, mode == ModeOfOperation.Commit, changelog, reviewer, tasks);
+                        var buildResult = await buildProcessor.ProcessTask(task, mode == ModeOfOperation.Commit, null, null, tasks);
                         allResults.Add(buildResult);
 
                         var mainDiffUrl = buildResult.Diff?.HosterUrl ?? buildResult.Diff?.RegularDiffLink;
@@ -355,23 +355,13 @@ class Program
 
                             if (mode == ModeOfOperation.Commit)
                             {
-                                if (committingPrNum == null)
-                                    throw new Exception("No PR number for commit");
-                                
-                                // Let's try getting the changelog again here in case we didn't get it the first time around
-                                if (string.IsNullOrEmpty(changelog) && repoName != null &&
-                                    gitHubApi != null)
-                                {
-                                    changelog = await gitHubApi.GetIssueBody(committingPrNum.Value);
-                                }
-
                                 await webservices.StagePluginBuild(new WebServices.StagedPluginInfo
                                 {
                                     InternalName = task.InternalName,
                                     Version = buildResult.Version!,
                                     Dip17Track = task.Channel,
-                                    PrNumber = committingPrNum.Value,
-                                    Changelog = changelog,
+                                    PrNumber = 0,
+                                    Changelog = null,
                                     IsInitialRelease = task.IsNewPlugin,
                                     DiffLinesAdded = buildResult.Diff?.LinesAdded,
                                     DiffLinesRemoved = buildResult.Diff?.LinesRemoved,
