@@ -1175,8 +1175,8 @@ public class BuildProcessor
                         version ?? throw new Exception("Committing, but version is null"),
                         task.Manifest.Plugin.MinimumVersion,
                         changelog,
-                        reviewer ?? throw new Exception("Committing, but reviewer is null"),
-                        submitter ?? throw new Exception("Committing, but submitter is null"),
+                        "",
+                        "",
                         allNeeds.Select(x => (x.Name, x.Version)));
                     
                     this.CommitReviewedNeeds(allNeeds, reviewer);
