@@ -880,8 +880,8 @@ public class BuildProcessor
     /// <exception cref="PluginCommitException">Error during repo commit, all no further work should be done</exception>
     public async Task<BuildResult> ProcessTask(BuildTask task, bool commit, string? changelog, string? reviewer, string? submitter, ISet<BuildTask> otherTasks)
     {
-        if (commit && string.IsNullOrWhiteSpace(reviewer))
-            throw new Exception("Reviewer must be set when committing");
+        //if (commit && string.IsNullOrWhiteSpace(reviewer))
+        //    throw new Exception("Reviewer must be set when committing");
         
         if (task.Type == BuildTask.TaskType.Remove)
         {
