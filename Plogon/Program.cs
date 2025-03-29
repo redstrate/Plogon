@@ -299,7 +299,7 @@ class Program
                         // When committing: Get the PR number for the merge to the manifest repo, and get the first approving reviewer
                         if (mode == ModeOfOperation.Commit)
                         {
-                            committingPrNum =
+                            /*committingPrNum =
                                 await webservices.GetPrNumber(task.InternalName, relevantCommitHashForWebServices)
                                 ?? throw new Exception($"No PR number for commit ({task.InternalName}, {relevantCommitHashForWebServices})");
                             Log.Verbose("PR number for {InternalName} ({Sha}): {PrNum}", task.InternalName, relevantCommitHashForWebServices, committingPrNum);
@@ -314,7 +314,7 @@ class Program
                             committingAuthor = prInfo.Author;
 
                             reviewer = await gitHubApi.GetReviewer(committingPrNum.Value);
-                            Log.Information("Reviewer for {InternalName} ({PrNum} by {Author}): {Reviewer}", task.InternalName, committingPrNum.Value, committingAuthor, reviewer);
+                            Log.Information("Reviewer for {InternalName} ({PrNum} by {Author}): {Reviewer}", task.InternalName, committingPrNum.Value, committingAuthor, reviewer);*/
                         }
                         // When running as a PR: Register the PR number for the plugin with webservices so that we know what plugin update came from what PR
                         // Only do this if we own the plugin, as we don't want to register PR numbers for plugins we don't own
