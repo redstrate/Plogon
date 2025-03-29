@@ -431,8 +431,8 @@ class Program
 
                             if (mode == ModeOfOperation.Commit)
                             {
-                                if (committingPrNum == null)
-                                    throw new Exception("No PR number for commit");
+                                //if (committingPrNum == null)
+                                 //   throw new Exception("No PR number for commit");
 
                                 // Let's try getting the changelog again here in case we didn't get it the first time around
                                 if (string.IsNullOrEmpty(changelog) && repoName != null &&
