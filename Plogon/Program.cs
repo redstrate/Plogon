@@ -428,31 +428,6 @@ class Program
                                 else if (!prLabels.HasFlag(GitHubApi.PrLabel.SizeMid) && !prLabels.HasFlag(GitHubApi.PrLabel.SizeLarge))
                                     prLabels |= GitHubApi.PrLabel.SizeSmall;
                             }
-
-                            if (mode == ModeOfOperation.Commit)
-                            {
-                                //if (committingPrNum == null)
-                                 //   throw new Exception("No PR number for commit");
-
-                                // Let's try getting the changelog again here in case we didn't get it the first time around
-                                if (string.IsNullOrEmpty(changelog) && repoName != null &&
-                                    gitHubApi != null)
-                                {
-                                    (_, changelog) = await gitHubApi.GetPullRequestInfo(committingPrNum.Value);
-                                }
-
-                                await webservices.StagePluginBuild(new WebServices.StagedPluginInfo
-                                {
-                                    InternalName = task.InternalName,
-                                    Version = buildResult.Version!,
-                                    Dip17Track = task.Channel,
-                                    PrNumber = committingPrNum.Value,
-                                    Changelog = changelog,
-                                    IsInitialRelease = task.IsNewPlugin,
-                                    DiffLinesAdded = buildResult.Diff?.LinesAdded,
-                                    DiffLinesRemoved = buildResult.Diff?.LinesRemoved,
-                                });
-                            }
                         }
                         else
                         {
